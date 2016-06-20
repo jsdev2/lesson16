@@ -1,20 +1,7 @@
 ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png)
 
-#Intro to CRUD and Firebase (3:00)
+#Intro to CRUD and Firebase
 
-| Timing | Type | Topic |
-| --- | --- | --- |
-| 10 min | [Opening](#opening) | Introduction to CRUD and Firebase |
-| 20 min | [Review](#review) | A Little Review...A lotta CRUD |
-| 15 min | [Introduction](#introduction1) | Understand CRUD Through Public APIs |
-| 10 min | [Introduction](#introduction2) | Firebase Introduction |
-| 35 min | [Setup](#setup) | Firebase Setup |
-| 15 min | [Codealong](#codealong3)  | Create with Firebase |
-| 15 min | [Lab](#codealong3)  | Mini lab with Firebase |
-| 20 min | [Codealong](#codealong3)  | Read with Firebase |
-| 30 min | [Codealong](#codealong3)  | Update with Firebase |
-| 10 min | [Codealong](#codealong3)  | Delete with Firebase |
-| 5 min |  [Conclusion](#conclusion)| Final Questions & Exit Tickets |
 
 
 ### Objectives
@@ -23,7 +10,7 @@ _After this lesson, students will be able to:_
 
 - Explain what CRUD is.
 - Explain the HTTP methods associated with CRUD.
-- Implement Firebase in an application.
+- Implement CRUD using Firebase in an application.
 - Build a full-stack app.
 
 ### Preparation
@@ -36,7 +23,7 @@ _Before this lesson, students should already be able to:_
 ---
 
 <a name = "opening"></a>
-## Introduction to CRUD and Firebase (10 min)
+## 1. Introduction to CRUD and Firebase (10 min)
 
 There are four standard things that you can do with an app's data, via its API: **C**reate, **R**ead, **U**pdate, and **D**elete, commonly known as **CRUD**. For example, with Instagram a user is allowed to 
 
@@ -50,7 +37,7 @@ Typically to implement CRUD, you have to run your own application on the server,
 ---
 
 <a name = "review"></a>
-## CRUD and HTTP verbs (20 min)
+## 2. CRUD and HTTP verbs (20 min)
 
 Even though we have not yet explicitly used the term CRUD in this course, we've gone over some of the things that are involved with implementing CRUD. Can you think of something we've done in an earlier lesson that falls into any of the categories of create, read, update or delete? 
 
@@ -74,7 +61,7 @@ And we'll point out which HTTP verbs are being implemented under the hood as we 
 ---
 
 <a name = "introduction1"></a>
-## Understand CRUD Through Public APIs (15 min)
+## 3. Understand CRUD Through Public APIs (15 min)
 
 Now that you have an understanding of what CRUD is and how it's implemented by means of HTTP methods, spend the next 15 minutes with a partner researching one or two of the following APIs (or any other API) to find examples of how to create, read, update or delete. In the examples you find, exactly is being created, read, updated or deleted? 
 
@@ -94,7 +81,7 @@ API ideas:
 ---
 
 <a name = "introduction2"></a>
-## Firebase, a "Backend as a Service" (10 min)
+## 4. Firebase, a "Backend as a Service" (10 min)
 
 So far in this course we have covered how to consume data from third-party APIs like Reddit and 500px, but have not yet created our own API. 
 
@@ -113,7 +100,7 @@ So, without further ado, let's go ahead and set up an application to use Firebas
 ---
 
 <a name = "setup"></a>
-## Firebase Setup (35 min)
+## 5. Firebase Setup (35 min)
 
 First, download the starter code from tktk.
 
@@ -163,9 +150,9 @@ Voilà! That's it! You've created a Firebase account, created a Firebase databas
 ---
 
 <a name = "codealong1"></a>
-## Create with Firebase (15 min)
+## 6. Create with Firebase (15 min)
 
-Before we completely dive in, to give you context, here's what I'll be building for demo purposes:
+Before we completely dive in, to give you context, here's what we'll be building for demo purposes:
 
 ---
 
@@ -262,7 +249,7 @@ Now we're done with **C**reate. Do you remember which HTTP method goes along wit
 
 ---
 
-## Mini-Lab: Save some messages (20 minutes)
+## 7. Mini-Lab: Save some messages (20 minutes)
 
 Now that you've seen the basics of how to save data to Firebase, comment out the code in your app about saving pony objects, and write some code to save messages ABOUT ponies, in a new section in your database that you will create, called "messages". 
 
@@ -283,7 +270,7 @@ And when you think it's working, use the Firebase console to see if your message
 ---
 
 <a name = "codealong2"></a>
-## Read with Firebase (20 min)
+## 8. Read with Firebase (20 min)
 
 After a My Little Pony message has been successfully saved to our database in the back end, we want to be able to show (_Read_) it on our app for the world to see. In order to do this we are going to need to follow a few steps:
 
@@ -342,7 +329,7 @@ To extract the info we're looking for so that we can render it into our UI (mess
 ---
 
 <a name = "codealong3"></a>
-## Update with Firebase (30 min)
+## 9. Update with Firebase (30 min)
 
 To perform the _U_ in CRUD, follow these steps:
 
@@ -433,7 +420,7 @@ Looking at the code above, you can see how we use part of this URL path to ident
 ---
 
 <a name = "codealong4"></a>
-## Delete with Firebase (10 min)
+## 10. Delete with Firebase (10 min)
 
 To perform the _D_ in CRUD:
 
@@ -463,7 +450,7 @@ Whew!
 ---
 
 <a name = "conclusion"></a>
-## Conclusion (5 min)
+## 11. Conclusion (5 min)
 
 - What does CRUD stand for?
 - What HTTP methods are associated with C, R, U and D?
