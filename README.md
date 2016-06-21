@@ -278,10 +278,9 @@ var config = {
   databaseURL: "https://harrington-test4.firebaseio.com",
   storageBucket: ""
 };
+
 firebase.initializeApp(config);
-
 var firebaseDB = firebase.database();
-
 var messagesInFirebase = firebaseDB.ref('messages');
 
 // Instead of the 'submit' event on the form element,
