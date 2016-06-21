@@ -267,6 +267,46 @@ Use the ponies code from the codealong as a model for how to save messages to th
 
 And when you think it's working, use the Firebase console to see if your messages are showing up in the database.
 
+***Answer:***
+
+```js
+
+// Initialize Firebase
+var config = {
+  apiKey: "AIzaSyApxANaHI176HJK8pA4aQLuOpehfzuh7Cs",
+  authDomain: "harrington-test4.firebaseapp.com",
+  databaseURL: "https://harrington-test4.firebaseio.com",
+  storageBucket: ""
+};
+firebase.initializeApp(config);
+
+var firebaseDB = firebase.database();
+
+var messagesInFirebase = firebaseDB.ref('messages');
+
+// Instead of the 'submit' event on the form element,
+// another option for the listener below is the 'click' 
+// event on the button element. Both will work.
+
+$('#message-form').on('submit', function(event) {
+
+  // To prevent the default behavior of the form
+  // element, which is refreshing the page:
+  event.preventDefault();
+
+  // Get the user's input.
+  var messageText = $('#message').val();
+
+  // "Create" a new message object in the database
+  messagesInFirebase.push({
+    message: messageText,
+    votes: 0
+  });
+
+});
+
+```
+
 ---
 
 <a name = "codealong2"></a>
@@ -459,4 +499,3 @@ Whew!
 - Is Firebase free?
 - Do all apps have CRUD?
 - How would you explain the front-end vs. the back-end to a fellow developer?
-
