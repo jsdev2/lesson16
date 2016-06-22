@@ -1,7 +1,6 @@
 ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png)
 
-#Intro to CRUD and Firebase
-
+#Intro to CRUD and Firebase 
 
 
 ### Objectives
@@ -102,7 +101,7 @@ So, without further ado, let's go ahead and set up an application to use Firebas
 <a name = "setup"></a>
 ## 5. Firebase Setup (35 min)
 
-First, download the starter code from tktk.
+First, download the starter code from [https://github.com/jsdev2/lesson16-starter](https://github.com/jsdev2/lesson16-starter). Click on "Clone or Download", then click on "Download ZIP". Unzip the folder and place it in your `GA-JS` folder.
 
 And then go to Google's new [Firebase site](https://firebase.google.com/) and sign up for Firebase.
 
@@ -326,44 +325,49 @@ So, how do we go about querying our Firebase database?
 
 firebaseDB.ref('messages').on('value', function(results) {
 
-  // Iterate through coming from database call
-  // Note: we haven't seen `for in` before -- this is one
-  // way to iterate through object keys.
+  // First remove all the current lis 
+  // so there won't be any dupes on the page
+  $('.message-board').empty();
+
+  // Now iterate through coming from database call
+  // Note: we haven't seen `Object.keys` before -- 
+  // this gets an array of the keys in an object. It
+  // is the best of a couple of different ways to
+  // iterate through an object.
 
   // Also note: we need to use .val() on the results
-  // to get something readable.
+  // to get something readable. Further note: This
+  // has nothing to do with the jQuery .val() method
 
   var messages = results.val();
 
+  console.log(results);
   console.log(messages);
 
-  // remove all the current lis so there won't be
-  // any dupes
-  $('.message-board').empty();
+  var weirdIds = Object.keys(messages);
 
-  for (weirdId in messages) {
+  weirdIds.forEach(function(weirdId) {
     var messageObject = messages[weirdId];
     var message = messageObject.message;
     var votes = messageObject.votes;
 
-    // render the messages and votes in the DOM
-    // create message element
-    var $votesSpan = $('<span class="votes"></span>').html(votes);
-    var $messageLi = $('<li></li>').html(message).append($votesSpan);
+    // render the message and its vote total in the DOM
+    var $votesSpan = $('<span>').addClass('votes').html(votes);
+    var $messageLi = $('<li>').html(message).append($votesSpan);
     $('.message-board').append($messageLi);
+  });
 
-  }
 });
 
 ```
 
 So we use our reference to our application's database (`firebaseDB`) to get a reference to our `messages` collection, and then we listen on that for any changes (using the special Firebase `value` event, which listens for any changes or additions or deletions of any values in the collection). 
 
->One very nice feature of a Firebase database is that it works in realtime, meaning the `.on()` method will set up an event listener which will cause our front end app to update as soon as anything in the db changes. This makes chat rooms pretty easy to implement.
+>One very nice feature of a Firebase database is that it works in realtime, meaning the `.on()` method will set up an event listener which will cause our front end app to update as soon as anything in the db changes.
 
 To extract the info we're looking for so that we can render it into our UI (messages and votes), we must iterate through the `messages` object and access each data object's `message` and `votes` properties.
 
-> **Note:** `.val()` is used to access the object that gets returned , `results`, that is being returned to us (and automatically converted from JSON by Firebase). The raw `results` object is unreadable.
+> **Note:** What Firebase returns to us (and automatically converts from a JSON string to a JS object under the hood), is an object which we are calling `results`. It is unreadable. To extract something you can use, we need Firebase's `.val()` function.
 
 ---
 
@@ -383,62 +387,52 @@ Well, in order to do that you have to know the weird id of the object you want.
 
 So let's say we want to set up an event listener on the number of votes, so that if a user clicks on it, it goes up one. 
 
-To do that and be able to update the correct object on the db, you have to have tied the weird id to the DOM element, so you can extract the weird id when the element gets clicked on.
-
-How do we do that? By adding what's called a "data attribute" to the HTML element. Data attributes all begin with "data-", and they are a way to store info on elements. It's best practice not to store a whole bunch of data in DOM elements -- typically just ids that help them identify which underlying data they were originally rendered from.
+There are several ways for the click listener to know which weird id to use when it is triggered. We're going to do it by setting all the event listeners in the `forEach` loop at the time that we render the items, and this way the weird ids, (and the vote totals) can be stored in closures.
 
 ```js
 
 firebaseDB.ref('messages').on('value', function(results) {
 
-  var messages = results.val();
-
-  // remove all the current lis so there won't be
-  // any dupes
+  // First remove all the current lis 
+  // so there won't be any dupes on the page
   $('.message-board').empty();
 
-  for (weirdId in messages) {
+  // Now iterate through the data from the server
+  // and render the messages, including their event listeners
+
+  var messages = results.val();
+
+  var weirdIds = Object.keys(messages);
+
+  weirdIds.forEach(function(weirdId) {
     var messageObject = messages[weirdId];
     var message = messageObject.message;
     var votes = messageObject.votes;
 
-  
-    var $votesSpan = $('<span class="votes"></span>').html(votes);
-    var $messageLi = $('<li></li>').html(message).append($votesSpan);
+    // Get a reference to the object in the database,
+    // using the url-like syntax for identifying it.
+    // Necessary for updating or deleting.
+    var messageInFirebase = firebaseDB.ref('messages/' + weirdId);
 
-    // NEW: When adding the li to the DOM,
-    // add the weird id with it.
+    // Make a new votesSpan
+    var $votesSpan = $('<span>').addClass('votes').html(votes);
 
-    $message.attr('data-id', weirdId);
-    
+    // Set the event votes-updating event listener on the $votesSpan
+    $votesSpan.on('click', function() {
+      // The user just clicked on the votes span element, so 
+      // update the votes property: add one to the last value
+      // we had stored in Firebase
+      messageInFirebase.update({
+        votes: votes + 1
+      });
+    });
+
+    // render the message and its vote total in the DOM
+    var $messageLi = $('<li>').html(message).append($votesSpan);
     $('.message-board').append($messageLi);
-  }
-});
-
-// Now set the listener for updating votes:
-
-$('.message-board').on('click', '.votes', function() {
-  var $voteSpan = $(this);
-
-  // Get the votes and turn them into a number
-  var votes = parseInt($voteSpan.html());
-
-  // Get the weird id
-  var $li = $voteSpan.parent();
-  var weirdId = $li.attr('data-id');
-
-  // Get a reference to the message object in the db, 
-  // using the url-like syntax for identifying it
-  var messageInFirebase = firebaseDB.ref('messages/' + weirdId);
-
-  // Update the votes property, with votes incremented
-  // because of the user having clicked on the votes element
-  messageInFirebase.update({
-    votes: votes + 1
   });
 
 });
-
 
 ```
 
@@ -446,14 +440,9 @@ Can you remember Firebase's data URL structure we covered a little earlier? In c
 
 Looking at the code above, you can see how we use part of this URL path to identify and access one of the messages, which we then use `update` to change the `votes` property on.
 
-***Also note:*** The list rerendered itself automatically, because of the listener that listens on changes in the data and rerenders everything.
+***Also note:*** The list rerendered itself automatically, because of the listener that listens on changes in the data, removes the old list, and rerenders everything from scratch every time. 
 
-
->For more info on data attributes: [MDN article on data attributes](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Using_data_attributes)
-
-
->Note that in Firebase, `update()` will update only the specific fields for which you pass in new values, while there's another method, `set()`, which will blow away the whole object, removing any fields that it doesn't specifically update. For instance, if you have an object in the db `{a: 5, b: 10}` and you run `update({a: 100})` to update it, you'll end up with `{a: 100, b: 10}` in the db, but if you run `set({a: 100})`, you'll end up with `{a: 100}`.
-
+>Note that in Firebase, `update()` will update only the specific fields for which you pass in new values, while there's another method, `set()`, which will blow away the whole object, removing any fields that it doesn't specifically update. For instance, if you have an object in the db `{a: 5, b: 10}` and you run `update({a: 100})` to update it, you'll end up with `{a: 100, b: 10}` in the db, but if you run `set({a: 100})`, you'll end up with `{a: 100}` only, and the `b` property will be erased.
 
 
 ---
@@ -463,25 +452,22 @@ Looking at the code above, you can see how we use part of this URL path to ident
 
 To perform the _D_ in CRUD:
 
-Get the reference to the object in the database the same way you do for updating. Then you use the `remove()` method. So if we wanted to delete a message from the db when the user double-clicks on it, we'd do this:
+Get the reference to the object in the database the same way you do for updating. Then you use the `remove()` method. For instance, if you had a collection of fruit objects in the db, stored under the name "fruits", and you wanted to remove one:
 
 ```js
-$('.message-board').on('dblclick', 'li', function() {
-  
-  // Get the weird id
-  var weirdId = $(this).attr('data-id');
-
-  // Get a reference to the message object in the db, 
-  // using the url-like syntax for identifying it
-  var messageInFirebase = firebaseDB.ref('messages/' + weirdId);
-
-  // Delete the object. 
-  messageInFirebase.remove();
-
-});
+// Assuming we already have a reference to the id 
+// for the fruit object we want in the database, 
+// stored in the variable `weirdId` : 
+var fruitInFirebase = firebaseDB.ref('fruits/' + weirdId);
+fruitInFirebase.remove();
 ```
 
-***Also note, once again:*** The list rerendered itself automatically, because of the listener that listens on changes in the messages data, and rerenders everything.
+
+### Practice on your own: Delete a My Little Pony message (15 min)
+
+Add an event listener to our My Little Pony code for each message, so that if the user double clicks on the message, it gets deleted from the database. (Reminder: the double-click event in the DOM is 'dblclick').
+
+***Also note, once again:*** The list will rerender itself automatically, because of the listener that listens on changes in the messages data -- including deletions -- and rerenders everything.
 
 
 Whew!
@@ -498,3 +484,4 @@ Whew!
 - Is Firebase free?
 - Do all apps have CRUD?
 - How would you explain the front-end vs. the back-end to a fellow developer?
+
