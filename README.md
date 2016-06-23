@@ -469,8 +469,36 @@ Add an event listener to our My Little Pony code for each message, so that if th
 
 ***Also note, once again:*** The list will rerender itself automatically, because of the listener that listens on changes in the messages data -- including deletions -- and rerenders everything.
 
+***Answer:***
+
+```js
+// ... 
+
+// Create a message item. 
+var $messageLi = $('<li>').html(message).append($votesSpan);
+
+// NEW CODE NOT IN LAST EXAMPLE:
+
+// Add a double-click event listener to it, for deletion.
+$messageLi.on('dblclick', function(event) {
+  messageInFirebase.remove();
+});
+
+// END OF NEW CODE NOT IN LAST EXAMPLE
+
+// Add the message item to the DOM
+$('.message-board').append($messageLi);
+
+// ...
+```
 
 Whew!
+
+## Surprise Dessert: It's a chat room! (5 min)
+
+If you comment out your config code, and replace it with mine, we have an interactive chat room!
+
+This will be the default behavior of your app, when multiple users go to your deployed URL.
 
 ---
 
@@ -484,4 +512,5 @@ Whew!
 - Is Firebase free?
 - Do all apps have CRUD?
 - How would you explain the front-end vs. the back-end to a fellow developer?
+
 
